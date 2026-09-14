@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 dotenv.config();
 import express from "express";
 import bodyParser from "body-parser";
-import authRouter from "./routes/auth.js";
+import authRouter from "./Routes/auth.js";
 
 
 
