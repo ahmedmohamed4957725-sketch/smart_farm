@@ -3,15 +3,21 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const db = new pg.Client({
+const { Pool } = pg;
+
+const db = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: {
         rejectUnauthorized: false,
     },
 });
 
-db.connect()
-    .then(() => console.log("Neon Database connected"))
-    .catch((err) => console.error("Database connection failed:", err));
+db.on("connect", () => {
+    console.log("Neon Database connected");
+});
+
+db.on("error", (err) => {
+    console.error("Unexpected database error:", err);
+});
 
 export default db;
