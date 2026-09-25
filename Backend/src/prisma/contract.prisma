@@ -1,0 +1,16 @@
+// use prisma-8
+// Contract inferred from the live database schema. Edit as needed, then run `prisma contract emit`.
+
+
+model Users {
+  id        BigInt        @id(map: "users_pkey") @default(autoincrement())
+  name      VarChar(255)
+  email     String        @unique(map: "users_email_key")
+  password  String?
+  createdAt Timestamp     @default(now()) @map("created_at")
+  googleId  VarChar(255)? @unique(map: "users_google_id_key") @map("google_id")
+  isActive  Boolean       @default(true) @map("is_active")
+  updatedAt Timestamp     @default(now()) @map("updated_at")
+  
+  @@map("users")
+}
