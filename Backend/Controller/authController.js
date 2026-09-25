@@ -1,11 +1,12 @@
-import db from "../Models/DB.js";
+
+import { db } from "../src/prisma/db.ts";
 import bcrypt from "bcrypt";
 import {
     generateAccessToken,
     generateRefreshToken
 } from "../utils/generateToken.js";
 
-import  googleClient from "../config/google.js";
+import googleClient from "../config/google.js";
 
 const saltRounds = 10;
 
@@ -19,12 +20,11 @@ export const register = async (req, res) => {
     }
 
     try {
-        const checkUser = await db.query(
-            "SELECT id FROM users WHERE email = $1",
-            [email]
-        );
+        const checkUser = await db.orm.public.Users.first({
+            email
+        });
 
-        if (checkUser.rows.length > 0) {
+        if (checkUser) {
             return res.status(409).json({
                 message: "User already exists"
             });
@@ -35,14 +35,11 @@ export const register = async (req, res) => {
             saltRounds
         );
 
-        const result = await db.query(
-            `INSERT INTO users (name, email, password)
-             VALUES ($1, $2, $3)
-             RETURNING id, name, email`,
-            [name, email, hashedPassword]
-        );
-
-        const user = result.rows[0];
+        const user = await db.orm.public.Users.create({
+            name,
+            email,
+            password: hashedPassword
+        });
 
         const accessToken = generateAccessToken(user);
         const refreshToken = generateRefreshToken(user);
@@ -54,7 +51,7 @@ export const register = async (req, res) => {
                 id: user.id,
                 name: user.name,
                 email: user.email
-            },
+            }
         });
 
     } catch (err) {
@@ -66,6 +63,7 @@ export const register = async (req, res) => {
     }
 };
 
+
 export const login = async (req, res) => {
     const { email, password } = req.body;
 
@@ -76,23 +74,20 @@ export const login = async (req, res) => {
     }
 
     try {
-        const result = await db.query(
-            "SELECT * FROM users WHERE email = $1",
-            [email]
-        );
+        const user = await db.orm.public.Users.first({
+            email
+        });
 
-        if (result.rows.length === 0) {
+        if (!user || !user.password) {
             return res.status(401).json({
                 message: "Invalid email or password"
             });
         }
 
-        const user = result.rows[0];
-        
         const match = await bcrypt.compare(
             password,
             user.password
-        ); 
+        );
 
         if (!match) {
             return res.status(401).json({
@@ -110,7 +105,7 @@ export const login = async (req, res) => {
                 id: user.id,
                 name: user.name,
                 email: user.email
-            },
+            }
         });
 
     } catch (err) {
@@ -152,41 +147,28 @@ export const googleLogin = async (req, res) => {
             });
         }
 
-        const result = await db.query(
-            "SELECT * FROM users WHERE email = $1",
-            [email]
-        );
+        let user = await db.orm.public.Users.first({
+            email
+        });
 
-        let user;
+        if (user) {
 
-        if (result.rows.length > 0) {
+            if (!user.googleId) {
 
-            user = result.rows[0];
-
-            if (!user.google_id) {
-
-                const updatedUser = await db.query(
-                    `UPDATE users
-                     SET google_id = $1
-                     WHERE id = $2
-                     RETURNING id, name, email, google_id`,
-                    [googleId, user.id]
-                );
-
-                user = updatedUser.rows[0];
+                user = await db.orm.public.Users
+                    .where({ id: user.id })
+                    .update({
+                        googleId
+                    });
             }
 
         } else {
 
-            const newUser = await db.query(
-                `INSERT INTO users
-                 (name, email, google_id)
-                 VALUES ($1, $2, $3)
-                 RETURNING id, name, email, google_id`,
-                [name, email, googleId]
-            );
-
-            user = newUser.rows[0];
+            user = await db.orm.public.Users.create({
+                name,
+                email,
+                googleId
+            });
         }
 
         const accessToken = generateAccessToken(user);
@@ -200,7 +182,7 @@ export const googleLogin = async (req, res) => {
                 id: user.id,
                 name: user.name,
                 email: user.email
-            },
+            }
         });
 
     } catch (error) {
