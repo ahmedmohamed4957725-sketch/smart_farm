@@ -1,14 +1,15 @@
+
 // use prisma-8
 
 model Users {
-  id        BigInt        @id(map: "users_pkey") @default(autoincrement())
+  id        BigInt       @id(map: "users_pkey") @default(autoincrement())
   name      VarChar(255)
-  email     String        @unique(map: "users_email_key")
+  email     String       @unique(map: "users_email_key")
   password  String?
-  createdAt Timestamp     @default(now()) @map("created_at")
+  createdAt String       @default(now()) @map("created_at")
   googleId  VarChar(255)? @unique(map: "users_google_id_key") @map("google_id")
-  isActive  Boolean       @default(true) @map("is_active")
-  updatedAt Timestamp     @default(now()) @map("updated_at")
+  isActive  Boolean      @default(true) @map("is_active")
+  updatedAt String       @default(now()) @map("updated_at")
 
   farms Farm[]
 
@@ -31,8 +32,9 @@ model Farm {
   name      VarChar(255)
   location  String
   area      Numeric(10, 2)
-  createdAt Timestamp @default(now())
-  updatedAt Timestamp @default(now())
+  createdAt String   @default(now())
+  updatedAt String   @default(now())
+
   user   Users  @relation(fields: [userId], references: [id])
   fields Field[]
 
@@ -45,8 +47,9 @@ model Field {
   cropId    BigInt?
   name      VarChar(255)
   area      Numeric(10, 2)
-  createdAt Timestamp @default(now())
-  updatedAt Timestamp @default(now())
+  createdAt String   @default(now())
+  updatedAt String   @default(now())
+
   farm Farm  @relation(fields: [farmId], references: [id])
   crop Crop? @relation(fields: [cropId], references: [id])
 
