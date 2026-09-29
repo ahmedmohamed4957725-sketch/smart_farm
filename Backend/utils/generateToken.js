@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 export const generateAccessToken = (user) => {
     return jwt.sign(
         {
-            id: user.id,
+            id: String(user.id),
             email: user.email,
             name: user.name
         },
@@ -17,7 +17,7 @@ export const generateAccessToken = (user) => {
 export const generateRefreshToken = (user) => {
     return jwt.sign(
         {
-            id: user.id
+            id: String(user.id)
         },
         process.env.JWT_REFRESH_SECRET,
         {
