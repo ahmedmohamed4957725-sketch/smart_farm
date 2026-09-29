@@ -34,7 +34,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'0175796f07adc786f2187727ccf4662d6a7033a3611f047850c12637b094eb27'>;
+  StorageHashBase<'398e495e610f9b98386283afa96bce516f8345f480d81a9f99ac1f7c0620c4ee'>;
 export type ExecutionHash = ExecutionHashBase<string>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
@@ -256,31 +256,31 @@ export type FieldOutputTypes = {
     };
     readonly Farm: {
       readonly area: Numeric<10, 2>;
-      readonly createdAt: CodecTypes['pg/timestamp-temporal@1']['output'];
+      readonly createdAt: CodecTypes['pg/text@1']['output'];
       readonly id: CodecTypes['pg/int8@1']['output'];
       readonly location: CodecTypes['pg/text@1']['output'];
       readonly name: Varchar<255>;
-      readonly updatedAt: CodecTypes['pg/timestamp-temporal@1']['output'];
+      readonly updatedAt: CodecTypes['pg/text@1']['output'];
       readonly userId: CodecTypes['pg/int8@1']['output'];
     };
     readonly Field: {
       readonly area: Numeric<10, 2>;
-      readonly createdAt: CodecTypes['pg/timestamp-temporal@1']['output'];
+      readonly createdAt: CodecTypes['pg/text@1']['output'];
       readonly cropId: CodecTypes['pg/int8@1']['output'] | null;
       readonly farmId: CodecTypes['pg/int8@1']['output'];
       readonly id: CodecTypes['pg/int8@1']['output'];
       readonly name: Varchar<255>;
-      readonly updatedAt: CodecTypes['pg/timestamp-temporal@1']['output'];
+      readonly updatedAt: CodecTypes['pg/text@1']['output'];
     };
     readonly Users: {
-      readonly createdAt: CodecTypes['pg/timestamp-temporal@1']['output'];
+      readonly createdAt: CodecTypes['pg/text@1']['output'];
       readonly email: CodecTypes['pg/text@1']['output'];
       readonly googleId: Varchar<255> | null;
       readonly id: CodecTypes['pg/int8@1']['output'];
       readonly isActive: CodecTypes['pg/bool@1']['output'];
       readonly name: Varchar<255>;
       readonly password: CodecTypes['pg/text@1']['output'] | null;
-      readonly updatedAt: CodecTypes['pg/timestamp-temporal@1']['output'];
+      readonly updatedAt: CodecTypes['pg/text@1']['output'];
     };
   };
 };
@@ -293,31 +293,31 @@ export type FieldInputTypes = {
     };
     readonly Farm: {
       readonly area: CodecTypes['pg/numeric@1']['input'];
-      readonly createdAt: CodecTypes['pg/timestamp-temporal@1']['input'];
+      readonly createdAt: CodecTypes['pg/text@1']['input'];
       readonly id: CodecTypes['pg/int8@1']['input'];
       readonly location: CodecTypes['pg/text@1']['input'];
       readonly name: CodecTypes['sql/varchar@1']['input'];
-      readonly updatedAt: CodecTypes['pg/timestamp-temporal@1']['input'];
+      readonly updatedAt: CodecTypes['pg/text@1']['input'];
       readonly userId: CodecTypes['pg/int8@1']['input'];
     };
     readonly Field: {
       readonly area: CodecTypes['pg/numeric@1']['input'];
-      readonly createdAt: CodecTypes['pg/timestamp-temporal@1']['input'];
+      readonly createdAt: CodecTypes['pg/text@1']['input'];
       readonly cropId: CodecTypes['pg/int8@1']['input'] | null;
       readonly farmId: CodecTypes['pg/int8@1']['input'];
       readonly id: CodecTypes['pg/int8@1']['input'];
       readonly name: CodecTypes['sql/varchar@1']['input'];
-      readonly updatedAt: CodecTypes['pg/timestamp-temporal@1']['input'];
+      readonly updatedAt: CodecTypes['pg/text@1']['input'];
     };
     readonly Users: {
-      readonly createdAt: CodecTypes['pg/timestamp-temporal@1']['input'];
+      readonly createdAt: CodecTypes['pg/text@1']['input'];
       readonly email: CodecTypes['pg/text@1']['input'];
       readonly googleId: CodecTypes['sql/varchar@1']['input'] | null;
       readonly id: CodecTypes['pg/int8@1']['input'];
       readonly isActive: CodecTypes['pg/bool@1']['input'];
       readonly name: CodecTypes['sql/varchar@1']['input'];
       readonly password: CodecTypes['pg/text@1']['input'] | null;
-      readonly updatedAt: CodecTypes['pg/timestamp-temporal@1']['input'];
+      readonly updatedAt: CodecTypes['pg/text@1']['input'];
     };
   };
 };
@@ -330,31 +330,31 @@ export type StorageColumnTypes = {
     };
     readonly farm: {
       readonly area: Numeric<10, 2>;
-      readonly createdAt: CodecTypes['pg/timestamp-temporal@1']['output'];
+      readonly createdAt: CodecTypes['pg/text@1']['output'];
       readonly id: CodecTypes['pg/int8@1']['output'];
       readonly location: CodecTypes['pg/text@1']['output'];
       readonly name: Varchar<255>;
-      readonly updatedAt: CodecTypes['pg/timestamp-temporal@1']['output'];
+      readonly updatedAt: CodecTypes['pg/text@1']['output'];
       readonly userId: CodecTypes['pg/int8@1']['output'];
     };
     readonly field: {
       readonly area: Numeric<10, 2>;
-      readonly createdAt: CodecTypes['pg/timestamp-temporal@1']['output'];
+      readonly createdAt: CodecTypes['pg/text@1']['output'];
       readonly cropId: CodecTypes['pg/int8@1']['output'] | null;
       readonly farmId: CodecTypes['pg/int8@1']['output'];
       readonly id: CodecTypes['pg/int8@1']['output'];
       readonly name: Varchar<255>;
-      readonly updatedAt: CodecTypes['pg/timestamp-temporal@1']['output'];
+      readonly updatedAt: CodecTypes['pg/text@1']['output'];
     };
     readonly users: {
-      readonly created_at: CodecTypes['pg/timestamp-temporal@1']['output'];
+      readonly created_at: CodecTypes['pg/text@1']['output'];
       readonly email: CodecTypes['pg/text@1']['output'];
       readonly google_id: Varchar<255> | null;
       readonly id: CodecTypes['pg/int8@1']['output'];
       readonly is_active: CodecTypes['pg/bool@1']['output'];
       readonly name: Varchar<255>;
       readonly password: CodecTypes['pg/text@1']['output'] | null;
-      readonly updated_at: CodecTypes['pg/timestamp-temporal@1']['output'];
+      readonly updated_at: CodecTypes['pg/text@1']['output'];
     };
   };
 };
@@ -367,31 +367,31 @@ export type StorageColumnInputTypes = {
     };
     readonly farm: {
       readonly area: CodecTypes['pg/numeric@1']['input'];
-      readonly createdAt: CodecTypes['pg/timestamp-temporal@1']['input'];
+      readonly createdAt: CodecTypes['pg/text@1']['input'];
       readonly id: CodecTypes['pg/int8@1']['input'];
       readonly location: CodecTypes['pg/text@1']['input'];
       readonly name: CodecTypes['sql/varchar@1']['input'];
-      readonly updatedAt: CodecTypes['pg/timestamp-temporal@1']['input'];
+      readonly updatedAt: CodecTypes['pg/text@1']['input'];
       readonly userId: CodecTypes['pg/int8@1']['input'];
     };
     readonly field: {
       readonly area: CodecTypes['pg/numeric@1']['input'];
-      readonly createdAt: CodecTypes['pg/timestamp-temporal@1']['input'];
+      readonly createdAt: CodecTypes['pg/text@1']['input'];
       readonly cropId: CodecTypes['pg/int8@1']['input'] | null;
       readonly farmId: CodecTypes['pg/int8@1']['input'];
       readonly id: CodecTypes['pg/int8@1']['input'];
       readonly name: CodecTypes['sql/varchar@1']['input'];
-      readonly updatedAt: CodecTypes['pg/timestamp-temporal@1']['input'];
+      readonly updatedAt: CodecTypes['pg/text@1']['input'];
     };
     readonly users: {
-      readonly created_at: CodecTypes['pg/timestamp-temporal@1']['input'];
+      readonly created_at: CodecTypes['pg/text@1']['input'];
       readonly email: CodecTypes['pg/text@1']['input'];
       readonly google_id: CodecTypes['sql/varchar@1']['input'] | null;
       readonly id: CodecTypes['pg/int8@1']['input'];
       readonly is_active: CodecTypes['pg/bool@1']['input'];
       readonly name: CodecTypes['sql/varchar@1']['input'];
       readonly password: CodecTypes['pg/text@1']['input'] | null;
-      readonly updated_at: CodecTypes['pg/timestamp-temporal@1']['input'];
+      readonly updated_at: CodecTypes['pg/text@1']['input'];
     };
   };
 };
@@ -406,11 +406,11 @@ export namespace Models {
   };
   export type public_Farm = {
     area: Numeric<10, 2>;
-    createdAt: CodecTypes['pg/timestamp-temporal@1']['output'];
+    createdAt: CodecTypes['pg/text@1']['output'];
     id: CodecTypes['pg/int8@1']['output'];
     location: CodecTypes['pg/text@1']['output'];
     name: Varchar<255>;
-    updatedAt: CodecTypes['pg/timestamp-temporal@1']['output'];
+    updatedAt: CodecTypes['pg/text@1']['output'];
     userId: CodecTypes['pg/int8@1']['output'];
     fields: public_Field[];
     user: public_Users;
@@ -418,25 +418,25 @@ export namespace Models {
   };
   export type public_Field = {
     area: Numeric<10, 2>;
-    createdAt: CodecTypes['pg/timestamp-temporal@1']['output'];
+    createdAt: CodecTypes['pg/text@1']['output'];
     cropId: CodecTypes['pg/int8@1']['output'] | null;
     farmId: CodecTypes['pg/int8@1']['output'];
     id: CodecTypes['pg/int8@1']['output'];
     name: Varchar<255>;
-    updatedAt: CodecTypes['pg/timestamp-temporal@1']['output'];
+    updatedAt: CodecTypes['pg/text@1']['output'];
     crop: public_Crop | null;
     farm: public_Farm;
     readonly [RelationKeys]?: 'crop' | 'farm';
   };
   export type public_Users = {
-    createdAt: CodecTypes['pg/timestamp-temporal@1']['output'];
+    createdAt: CodecTypes['pg/text@1']['output'];
     email: CodecTypes['pg/text@1']['output'];
     googleId: Varchar<255> | null;
     id: CodecTypes['pg/int8@1']['output'];
     isActive: CodecTypes['pg/bool@1']['output'];
     name: Varchar<255>;
     password: CodecTypes['pg/text@1']['output'] | null;
-    updatedAt: CodecTypes['pg/timestamp-temporal@1']['output'];
+    updatedAt: CodecTypes['pg/text@1']['output'];
     farms: public_Farm[];
     readonly [RelationKeys]?: 'farms';
   };
@@ -506,8 +506,8 @@ type ContractBase = Omit<
                   readonly typeParams: { readonly precision: 10; readonly scale: 2 };
                 };
                 readonly createdAt: {
-                  readonly nativeType: 'timestamp';
-                  readonly codecId: 'pg/timestamp-temporal@1';
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
                   readonly nullable: false;
                   readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
                 };
@@ -532,8 +532,8 @@ type ContractBase = Omit<
                   readonly typeParams: { readonly length: 255 };
                 };
                 readonly updatedAt: {
-                  readonly nativeType: 'timestamp';
-                  readonly codecId: 'pg/timestamp-temporal@1';
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
                   readonly nullable: false;
                   readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
                 };
@@ -577,8 +577,8 @@ type ContractBase = Omit<
                   readonly typeParams: { readonly precision: 10; readonly scale: 2 };
                 };
                 readonly createdAt: {
-                  readonly nativeType: 'timestamp';
-                  readonly codecId: 'pg/timestamp-temporal@1';
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
                   readonly nullable: false;
                   readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
                 };
@@ -608,8 +608,8 @@ type ContractBase = Omit<
                   readonly typeParams: { readonly length: 255 };
                 };
                 readonly updatedAt: {
-                  readonly nativeType: 'timestamp';
-                  readonly codecId: 'pg/timestamp-temporal@1';
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
                   readonly nullable: false;
                   readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
                 };
@@ -660,8 +660,8 @@ type ContractBase = Omit<
             readonly users: {
               columns: {
                 readonly created_at: {
-                  readonly nativeType: 'timestamp';
-                  readonly codecId: 'pg/timestamp-temporal@1';
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
                   readonly nullable: false;
                   readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
                 };
@@ -706,8 +706,8 @@ type ContractBase = Omit<
                   readonly nullable: true;
                 };
                 readonly updated_at: {
-                  readonly nativeType: 'timestamp';
-                  readonly codecId: 'pg/timestamp-temporal@1';
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
                   readonly nullable: false;
                   readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
                 };
@@ -794,10 +794,7 @@ type ContractBase = Omit<
               };
               readonly createdAt: {
                 readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamp-temporal@1';
-                };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
               readonly id: {
                 readonly nullable: false;
@@ -817,10 +814,7 @@ type ContractBase = Omit<
               };
               readonly updatedAt: {
                 readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamp-temporal@1';
-                };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
               readonly userId: {
                 readonly nullable: false;
@@ -878,10 +872,7 @@ type ContractBase = Omit<
               };
               readonly createdAt: {
                 readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamp-temporal@1';
-                };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
               readonly cropId: {
                 readonly nullable: true;
@@ -905,10 +896,7 @@ type ContractBase = Omit<
               };
               readonly updatedAt: {
                 readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamp-temporal@1';
-                };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
             };
             readonly relations: {
@@ -949,10 +937,7 @@ type ContractBase = Omit<
             readonly fields: {
               readonly createdAt: {
                 readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamp-temporal@1';
-                };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
               readonly email: {
                 readonly nullable: false;
@@ -988,10 +973,7 @@ type ContractBase = Omit<
               };
               readonly updatedAt: {
                 readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamp-temporal@1';
-                };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
             };
             readonly relations: {
