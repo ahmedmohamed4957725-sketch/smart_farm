@@ -11,19 +11,14 @@ import googleClient from "../config/google.js";
 const saltRounds = 10;
 
 export const register = async (req, res) => {
-    console.log("REGISTERING USER:hello");
     const { name, email, password } = req.body;
-    console.log("REGISTERING USER:", name, email, password);
     if (!name || !email || !password) {
         return res.status(400).json({
             message: "Name, email and password are required",
         },
-        console.log("done")
     );
     }
-        console.log("start:");
     try {
-        console.log("REGISTERING USER:");
         const checkUser = await db.orm.public.Users.first({
             email
         });
@@ -52,10 +47,12 @@ export const register = async (req, res) => {
             message: "User registered successfully",
 
             user: {
-                id: user.id.toString(),
+                id: String(user.id),
                 name: user.name,
                 email: user.email
-            }
+            },
+            accessToken,
+            refreshToken
         });
 
     } catch (err) {
@@ -110,10 +107,12 @@ export const login = async (req, res) => {
             message: "Login successful",
 
             user: {
-                id: user.id,
+                id: String(user.id),
                 name: user.name,
                 email: user.email
-            }
+            },
+            accessToken,
+            refreshToken
         });
 
     } catch (err) {
@@ -187,10 +186,12 @@ export const googleLogin = async (req, res) => {
             message: "Google login successful",
 
             user: {
-                id: user.id,
+                id: String(user.id),
                 name: user.name,
                 email: user.email
-            }
+            },
+            accessToken,
+            refreshToken
         });
 
     } catch (error) {
