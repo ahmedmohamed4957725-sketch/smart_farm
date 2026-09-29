@@ -34,7 +34,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'0175796f07adc786f2187727ccf4662d6a7033a3611f047850c12637b094eb27'>;
+  StorageHashBase<'5afc79d36e540064258cea1474c45964c8fb331c5ee5dcad30e22ed173f17f28'>;
 export type ExecutionHash = ExecutionHashBase<string>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
@@ -334,7 +334,7 @@ export type StorageColumnTypes = {
       readonly id: CodecTypes['pg/int8@1']['output'];
       readonly location: CodecTypes['pg/text@1']['output'];
       readonly name: Varchar<255>;
-      readonly updatedAt: CodecTypes['pg/timestamp-temporal@1']['output'];
+      readonly updated_at: CodecTypes['pg/timestamp-temporal@1']['output'];
       readonly userId: CodecTypes['pg/int8@1']['output'];
     };
     readonly field: {
@@ -344,7 +344,7 @@ export type StorageColumnTypes = {
       readonly farmId: CodecTypes['pg/int8@1']['output'];
       readonly id: CodecTypes['pg/int8@1']['output'];
       readonly name: Varchar<255>;
-      readonly updatedAt: CodecTypes['pg/timestamp-temporal@1']['output'];
+      readonly updated_at: CodecTypes['pg/timestamp-temporal@1']['output'];
     };
     readonly users: {
       readonly created_at: CodecTypes['pg/timestamp-temporal@1']['output'];
@@ -371,7 +371,7 @@ export type StorageColumnInputTypes = {
       readonly id: CodecTypes['pg/int8@1']['input'];
       readonly location: CodecTypes['pg/text@1']['input'];
       readonly name: CodecTypes['sql/varchar@1']['input'];
-      readonly updatedAt: CodecTypes['pg/timestamp-temporal@1']['input'];
+      readonly updated_at: CodecTypes['pg/timestamp-temporal@1']['input'];
       readonly userId: CodecTypes['pg/int8@1']['input'];
     };
     readonly field: {
@@ -381,7 +381,7 @@ export type StorageColumnInputTypes = {
       readonly farmId: CodecTypes['pg/int8@1']['input'];
       readonly id: CodecTypes['pg/int8@1']['input'];
       readonly name: CodecTypes['sql/varchar@1']['input'];
-      readonly updatedAt: CodecTypes['pg/timestamp-temporal@1']['input'];
+      readonly updated_at: CodecTypes['pg/timestamp-temporal@1']['input'];
     };
     readonly users: {
       readonly created_at: CodecTypes['pg/timestamp-temporal@1']['input'];
@@ -531,7 +531,7 @@ type ContractBase = Omit<
                   readonly nullable: false;
                   readonly typeParams: { readonly length: 255 };
                 };
-                readonly updatedAt: {
+                readonly updated_at: {
                   readonly nativeType: 'timestamp';
                   readonly codecId: 'pg/timestamp-temporal@1';
                   readonly nullable: false;
@@ -607,7 +607,7 @@ type ContractBase = Omit<
                   readonly nullable: false;
                   readonly typeParams: { readonly length: 255 };
                 };
-                readonly updatedAt: {
+                readonly updated_at: {
                   readonly nativeType: 'timestamp';
                   readonly codecId: 'pg/timestamp-temporal@1';
                   readonly nullable: false;
@@ -861,7 +861,7 @@ type ContractBase = Omit<
                 readonly id: { readonly column: 'id' };
                 readonly location: { readonly column: 'location' };
                 readonly name: { readonly column: 'name' };
-                readonly updatedAt: { readonly column: 'updatedAt' };
+                readonly updatedAt: { readonly column: 'updated_at' };
                 readonly userId: { readonly column: 'userId' };
               };
             };
@@ -941,7 +941,7 @@ type ContractBase = Omit<
                 readonly farmId: { readonly column: 'farmId' };
                 readonly id: { readonly column: 'id' };
                 readonly name: { readonly column: 'name' };
-                readonly updatedAt: { readonly column: 'updatedAt' };
+                readonly updatedAt: { readonly column: 'updated_at' };
               };
             };
           };

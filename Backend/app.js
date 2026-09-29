@@ -11,6 +11,12 @@ const port = process.env.PORT || 3000;
 
 
 app.use(express.json());
+
+app.use((req, res, next) => {
+    console.log("REQUEST RECEIVED:", req.method, req.url);
+    next();
+});
+
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
@@ -19,7 +25,7 @@ app.use("/",
 );
 
 
- 
+ console.log("Starting server on port:", port);
 app.listen(port, "0.0.0.0", () => {
     console.log(`app listening on port http://localhost:${port}`)
 })

@@ -10,3 +10,33 @@ CREATE TABLE
         google_id VARCHAR(255) UNIQUE,
         is_active BOOLEAN NOT NULL DEFAULT TRUE
     );
+
+CREATE TABLE
+    farm (
+        id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+        user_id BIGINT NOT NULL REFERENCES users (id),
+        name VARCHAR(255) NOT NULL,
+        location TEXT NOT NULL,
+        area DECIMAL(10, 2) NOT NULL,
+        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    );
+
+CREATE TABLE
+    field (
+        
+        id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+        farm_id BIGINT NOT NULL REFERENCES farm (id),
+        crop_id BIGINT REFERENCES crop (id),
+        name VARCHAR(255) NOT NULL,
+        area DECIMAL(10, 2) NOT NULL,
+        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    );
+
+CREATE TABLE
+    crop (
+        id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        description TEXT
+    );
