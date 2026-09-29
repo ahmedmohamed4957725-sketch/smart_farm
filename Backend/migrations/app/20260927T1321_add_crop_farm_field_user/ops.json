@@ -1,0 +1,522 @@
+[
+  {
+    "id": "dropTable.users",
+    "label": "Drop table \"users\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "users"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"users\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"users\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop table \"users\"",
+        "sql": "DROP TABLE \"public\".\"users\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"users\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"users\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.Crop",
+    "label": "Create table \"Crop\"",
+    "summary": "Creates table \"Crop\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "Crop"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"Crop\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Crop\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"Crop\"",
+        "sql": "CREATE TABLE \"public\".\"Crop\" (\n  \"description\" text,\n  \"id\" BIGSERIAL NOT NULL,\n  \"name\" character varying(255) NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"Crop\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Crop\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.Farm",
+    "label": "Create table \"Farm\"",
+    "summary": "Creates table \"Farm\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "Farm"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"Farm\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Farm\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"Farm\"",
+        "sql": "CREATE TABLE \"public\".\"Farm\" (\n  \"area\" numeric(10,2) NOT NULL,\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"id\" BIGSERIAL NOT NULL,\n  \"location\" text NOT NULL,\n  \"name\" character varying(255) NOT NULL,\n  \"updatedAt\" timestamptz NOT NULL,\n  \"userId\" int8 NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"Farm\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Farm\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.Field",
+    "label": "Create table \"Field\"",
+    "summary": "Creates table \"Field\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "Field"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"Field\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Field\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"Field\"",
+        "sql": "CREATE TABLE \"public\".\"Field\" (\n  \"area\" numeric(10,2) NOT NULL,\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"cropId\" int8,\n  \"farmId\" int8 NOT NULL,\n  \"id\" BIGSERIAL NOT NULL,\n  \"name\" character varying(255) NOT NULL,\n  \"updatedAt\" timestamptz NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"Field\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Field\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.user",
+    "label": "Create table \"user\"",
+    "summary": "Creates table \"user\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "user"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"user\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"user\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"user\"",
+        "sql": "CREATE TABLE \"public\".\"user\" (\n  \"created_at\" timestamp DEFAULT (now()) NOT NULL,\n  \"email\" text NOT NULL,\n  \"google_id\" character varying(255),\n  \"id\" BIGSERIAL NOT NULL,\n  \"is_active\" bool DEFAULT true NOT NULL,\n  \"name\" character varying(255) NOT NULL,\n  \"password\" text,\n  \"updated_at\" timestamp DEFAULT (now()) NOT NULL,\n  CONSTRAINT \"users_pkey\" PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"user\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"user\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.user.users_email_key",
+    "label": "Add unique constraint on \"user\" (email)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "users_email_key",
+        "table": "user"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"users_email_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "users_email_key",
+          "public",
+          "\"public\".\"user\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"users_email_key\"",
+        "sql": "ALTER TABLE \"public\".\"user\" ADD CONSTRAINT \"users_email_key\" UNIQUE (\"email\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"users_email_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "users_email_key",
+          "public",
+          "\"public\".\"user\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.user.users_google_id_key",
+    "label": "Add unique constraint on \"user\" (google_id)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "users_google_id_key",
+        "table": "user"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"users_google_id_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "users_google_id_key",
+          "public",
+          "\"public\".\"user\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"users_google_id_key\"",
+        "sql": "ALTER TABLE \"public\".\"user\" ADD CONSTRAINT \"users_google_id_key\" UNIQUE (\"google_id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"users_google_id_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "users_google_id_key",
+          "public",
+          "\"public\".\"user\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.Farm.Farm_userId_idx_a489d58a",
+    "label": "Create index \"Farm_userId_idx_a489d58a\" on \"Farm\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "Farm_userId_idx_a489d58a",
+        "table": "Farm"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"Farm_userId_idx_a489d58a\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Farm_userId_idx_a489d58a\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"Farm_userId_idx_a489d58a\"",
+        "sql": "CREATE INDEX \"Farm_userId_idx_a489d58a\" ON \"public\".\"Farm\" (\"userId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"Farm_userId_idx_a489d58a\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Farm_userId_idx_a489d58a\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.Field.Field_cropId_idx_879e8d63",
+    "label": "Create index \"Field_cropId_idx_879e8d63\" on \"Field\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "Field_cropId_idx_879e8d63",
+        "table": "Field"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"Field_cropId_idx_879e8d63\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Field_cropId_idx_879e8d63\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"Field_cropId_idx_879e8d63\"",
+        "sql": "CREATE INDEX \"Field_cropId_idx_879e8d63\" ON \"public\".\"Field\" (\"cropId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"Field_cropId_idx_879e8d63\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Field_cropId_idx_879e8d63\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.Field.Field_farmId_idx_786bd89b",
+    "label": "Create index \"Field_farmId_idx_786bd89b\" on \"Field\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "Field_farmId_idx_786bd89b",
+        "table": "Field"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"Field_farmId_idx_786bd89b\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Field_farmId_idx_786bd89b\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"Field_farmId_idx_786bd89b\"",
+        "sql": "CREATE INDEX \"Field_farmId_idx_786bd89b\" ON \"public\".\"Field\" (\"farmId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"Field_farmId_idx_786bd89b\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Field_farmId_idx_786bd89b\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.Farm.Farm_userId_fkey",
+    "label": "Add foreign key \"Farm_userId_fkey\" on \"Farm\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "Farm_userId_fkey",
+        "table": "Farm"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"Farm_userId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Farm_userId_fkey",
+          "public",
+          "\"public\".\"Farm\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"Farm_userId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"Farm\"\nADD CONSTRAINT \"Farm_userId_fkey\"\nFOREIGN KEY (\"userId\")\nREFERENCES \"public\".\"user\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"Farm_userId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Farm_userId_fkey",
+          "public",
+          "\"public\".\"Farm\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.Field.Field_farmId_fkey",
+    "label": "Add foreign key \"Field_farmId_fkey\" on \"Field\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "Field_farmId_fkey",
+        "table": "Field"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"Field_farmId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Field_farmId_fkey",
+          "public",
+          "\"public\".\"Field\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"Field_farmId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"Field\"\nADD CONSTRAINT \"Field_farmId_fkey\"\nFOREIGN KEY (\"farmId\")\nREFERENCES \"public\".\"Farm\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"Field_farmId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Field_farmId_fkey",
+          "public",
+          "\"public\".\"Field\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.Field.Field_cropId_fkey",
+    "label": "Add foreign key \"Field_cropId_fkey\" on \"Field\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "Field_cropId_fkey",
+        "table": "Field"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"Field_cropId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Field_cropId_fkey",
+          "public",
+          "\"public\".\"Field\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"Field_cropId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"Field\"\nADD CONSTRAINT \"Field_cropId_fkey\"\nFOREIGN KEY (\"cropId\")\nREFERENCES \"public\".\"Crop\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"Field_cropId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Field_cropId_fkey",
+          "public",
+          "\"public\".\"Field\""
+        ]
+      }
+    ]
+  }
+]

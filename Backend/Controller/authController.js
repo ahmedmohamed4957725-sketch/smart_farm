@@ -11,15 +11,19 @@ import googleClient from "../config/google.js";
 const saltRounds = 10;
 
 export const register = async (req, res) => {
+    console.log("REGISTERING USER:hello");
     const { name, email, password } = req.body;
-
+    console.log("REGISTERING USER:", name, email, password);
     if (!name || !email || !password) {
         return res.status(400).json({
-            message: "Name, email and password are required"
-        });
+            message: "Name, email and password are required",
+        },
+        console.log("done")
+    );
     }
-
+        console.log("start:");
     try {
+        console.log("REGISTERING USER:");
         const checkUser = await db.orm.public.Users.first({
             email
         });
@@ -48,17 +52,21 @@ export const register = async (req, res) => {
             message: "User registered successfully",
 
             user: {
-                id: user.id,
+                id: user.id.toString(),
                 name: user.name,
                 email: user.email
             }
         });
 
     } catch (err) {
-        console.error(err);
+        console.log("REGISTER ERROR:");
+        console.log(err);
+        console.log(err?.message);
+        console.log(err?.stack);
 
         return res.status(500).json({
-            message: "Register failed"
+            message: "Register failed",
+            error: err?.message
         });
     }
 };
@@ -78,9 +86,9 @@ export const login = async (req, res) => {
             email
         });
 
-        if (!user || !user.password) {
+        if (!user) {
             return res.status(401).json({
-                message: "Invalid email or password"
+                message: "Invalid email"
             });
         }
 
@@ -91,7 +99,7 @@ export const login = async (req, res) => {
 
         if (!match) {
             return res.status(401).json({
-                message: "Invalid email or password"
+                message: "Invalid password"
             });
         }
 

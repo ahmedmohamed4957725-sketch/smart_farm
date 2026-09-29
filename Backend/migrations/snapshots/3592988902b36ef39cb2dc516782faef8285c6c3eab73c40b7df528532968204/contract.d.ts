@@ -34,8 +34,9 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'0175796f07adc786f2187727ccf4662d6a7033a3611f047850c12637b094eb27'>;
-export type ExecutionHash = ExecutionHashBase<string>;
+  StorageHashBase<'3592988902b36ef39cb2dc516782faef8285c6c3eab73c40b7df528532968204'>;
+export type ExecutionHash =
+  ExecutionHashBase<'06f9500254a64b95d3ac61c480c64aa8260521c5be43b99d3d5d1dd9e74bcff6'>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
 
@@ -260,7 +261,7 @@ export type FieldOutputTypes = {
       readonly id: CodecTypes['pg/int8@1']['output'];
       readonly location: CodecTypes['pg/text@1']['output'];
       readonly name: Varchar<255>;
-      readonly updatedAt: CodecTypes['pg/timestamp-temporal@1']['output'];
+      readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
       readonly userId: CodecTypes['pg/int8@1']['output'];
     };
     readonly Field: {
@@ -270,7 +271,7 @@ export type FieldOutputTypes = {
       readonly farmId: CodecTypes['pg/int8@1']['output'];
       readonly id: CodecTypes['pg/int8@1']['output'];
       readonly name: Varchar<255>;
-      readonly updatedAt: CodecTypes['pg/timestamp-temporal@1']['output'];
+      readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
     };
     readonly Users: {
       readonly createdAt: CodecTypes['pg/timestamp-temporal@1']['output'];
@@ -297,7 +298,7 @@ export type FieldInputTypes = {
       readonly id: CodecTypes['pg/int8@1']['input'];
       readonly location: CodecTypes['pg/text@1']['input'];
       readonly name: CodecTypes['sql/varchar@1']['input'];
-      readonly updatedAt: CodecTypes['pg/timestamp-temporal@1']['input'];
+      readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
       readonly userId: CodecTypes['pg/int8@1']['input'];
     };
     readonly Field: {
@@ -307,7 +308,7 @@ export type FieldInputTypes = {
       readonly farmId: CodecTypes['pg/int8@1']['input'];
       readonly id: CodecTypes['pg/int8@1']['input'];
       readonly name: CodecTypes['sql/varchar@1']['input'];
-      readonly updatedAt: CodecTypes['pg/timestamp-temporal@1']['input'];
+      readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
     };
     readonly Users: {
       readonly createdAt: CodecTypes['pg/timestamp-temporal@1']['input'];
@@ -334,7 +335,7 @@ export type StorageColumnTypes = {
       readonly id: CodecTypes['pg/int8@1']['output'];
       readonly location: CodecTypes['pg/text@1']['output'];
       readonly name: Varchar<255>;
-      readonly updatedAt: CodecTypes['pg/timestamp-temporal@1']['output'];
+      readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
       readonly userId: CodecTypes['pg/int8@1']['output'];
     };
     readonly field: {
@@ -344,7 +345,7 @@ export type StorageColumnTypes = {
       readonly farmId: CodecTypes['pg/int8@1']['output'];
       readonly id: CodecTypes['pg/int8@1']['output'];
       readonly name: Varchar<255>;
-      readonly updatedAt: CodecTypes['pg/timestamp-temporal@1']['output'];
+      readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
     };
     readonly users: {
       readonly created_at: CodecTypes['pg/timestamp-temporal@1']['output'];
@@ -371,7 +372,7 @@ export type StorageColumnInputTypes = {
       readonly id: CodecTypes['pg/int8@1']['input'];
       readonly location: CodecTypes['pg/text@1']['input'];
       readonly name: CodecTypes['sql/varchar@1']['input'];
-      readonly updatedAt: CodecTypes['pg/timestamp-temporal@1']['input'];
+      readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
       readonly userId: CodecTypes['pg/int8@1']['input'];
     };
     readonly field: {
@@ -381,7 +382,7 @@ export type StorageColumnInputTypes = {
       readonly farmId: CodecTypes['pg/int8@1']['input'];
       readonly id: CodecTypes['pg/int8@1']['input'];
       readonly name: CodecTypes['sql/varchar@1']['input'];
-      readonly updatedAt: CodecTypes['pg/timestamp-temporal@1']['input'];
+      readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
     };
     readonly users: {
       readonly created_at: CodecTypes['pg/timestamp-temporal@1']['input'];
@@ -410,7 +411,7 @@ export namespace Models {
     id: CodecTypes['pg/int8@1']['output'];
     location: CodecTypes['pg/text@1']['output'];
     name: Varchar<255>;
-    updatedAt: CodecTypes['pg/timestamp-temporal@1']['output'];
+    updatedAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
     userId: CodecTypes['pg/int8@1']['output'];
     fields: public_Field[];
     user: public_Users;
@@ -423,7 +424,7 @@ export namespace Models {
     farmId: CodecTypes['pg/int8@1']['output'];
     id: CodecTypes['pg/int8@1']['output'];
     name: Varchar<255>;
-    updatedAt: CodecTypes['pg/timestamp-temporal@1']['output'];
+    updatedAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
     crop: public_Crop | null;
     farm: public_Farm;
     readonly [RelationKeys]?: 'crop' | 'farm';
@@ -532,10 +533,9 @@ type ContractBase = Omit<
                   readonly typeParams: { readonly length: 255 };
                 };
                 readonly updatedAt: {
-                  readonly nativeType: 'timestamp';
-                  readonly codecId: 'pg/timestamp-temporal@1';
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
                   readonly nullable: false;
-                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
                 };
                 readonly userId: {
                   readonly nativeType: 'int8';
@@ -608,10 +608,9 @@ type ContractBase = Omit<
                   readonly typeParams: { readonly length: 255 };
                 };
                 readonly updatedAt: {
-                  readonly nativeType: 'timestamp';
-                  readonly codecId: 'pg/timestamp-temporal@1';
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
                   readonly nullable: false;
-                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
                 };
               };
               primaryKey: { readonly columns: readonly ['id'] };
@@ -819,7 +818,7 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: {
                   readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamp-temporal@1';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
                 };
               };
               readonly userId: {
@@ -907,7 +906,7 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: {
                   readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamp-temporal@1';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
                 };
               };
             };
@@ -1044,6 +1043,31 @@ type ContractBase = Omit<
     };
   };
   readonly extensions: {};
+  readonly execution: {
+    readonly executionHash: ExecutionHash;
+    readonly mutations: {
+      readonly defaults: readonly [
+        {
+          readonly onCreate: { readonly id: 'instantNow'; readonly kind: 'generator' };
+          readonly onUpdate: { readonly id: 'instantNow'; readonly kind: 'generator' };
+          readonly ref: {
+            readonly column: 'updatedAt';
+            readonly namespace: 'public';
+            readonly table: 'farm';
+          };
+        },
+        {
+          readonly onCreate: { readonly id: 'instantNow'; readonly kind: 'generator' };
+          readonly onUpdate: { readonly id: 'instantNow'; readonly kind: 'generator' };
+          readonly ref: {
+            readonly column: 'updatedAt';
+            readonly namespace: 'public';
+            readonly table: 'field';
+          };
+        },
+      ];
+    };
+  };
   readonly meta: {};
 
   readonly profileHash: ProfileHash;
