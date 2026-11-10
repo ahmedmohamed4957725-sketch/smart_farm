@@ -1,6 +1,7 @@
 
 import { db } from "../src/prisma/db.ts";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import {
     generateAccessToken,
     generateRefreshToken
@@ -49,7 +50,9 @@ export const register = async (req, res) => {
             user: {
                 id: String(user.id),
                 name: user.name,
-                email: user.email
+                email: user.email,
+                role: user.role || null
+                
             },
             accessToken,
             refreshToken
@@ -109,7 +112,9 @@ export const login = async (req, res) => {
             user: {
                 id: String(user.id),
                 name: user.name,
-                email: user.email
+                email: user.email,
+                role: user.role || null
+                
             },
             accessToken,
             refreshToken
@@ -200,6 +205,48 @@ export const googleLogin = async (req, res) => {
 
         return res.status(401).json({
             message: "Google authentication failed"
+        });
+    }
+};
+
+
+
+export const refreshAccessToken = async (req, res) => {
+    try {
+        const { refreshToken } = req.body;
+
+        if (!refreshToken) {
+            return res.status(401).json({
+                message: "Refresh token is required"
+            });
+        }
+
+        const decoded = jwt.verify(
+            refreshToken,
+            process.env.JWT_REFRESH_SECRET
+        );
+
+        const user = await db.orm.public.Users.first({
+            id: Number(decoded.id)
+        });
+
+        if (!user) {
+            return res.status(401).json({
+                message: "User not found"
+            });
+        }
+
+        const accessToken = generateAccessToken(user);
+
+        return res.status(200).json({
+            accessToken
+        });
+
+    } catch (error) {
+        console.error("REFRESH TOKEN ERROR:", error);
+
+        return res.status(401).json({
+            message: "Invalid or expired refresh token"
         });
     }
 };

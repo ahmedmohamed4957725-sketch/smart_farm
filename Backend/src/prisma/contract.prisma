@@ -1,25 +1,34 @@
 
+
 // use prisma-8
 
-model Users {
-  id        BigInt       @id(map: "users_pkey") @default(autoincrement())
-  name      VarChar(255)
-  email     String       @unique(map: "users_email_key")
-  password  String?
-  createdAt String       @default(now()) @map("created_at")
-  googleId  VarChar(255)? @unique(map: "users_google_id_key") @map("google_id")
-  isActive  Boolean      @default(true) @map("is_active")
-  updatedAt String       @default(now()) @map("updated_at")
 
-  farms Farm[]
+
+
+model Users {
+  id                        Int                       @id @default(autoincrement())
+  name                      VarChar(255)
+  email                     VarChar(255)              @unique
+  password                  VarChar(255)?
+  googleId                  VarChar(255)?             @unique @map("google_id")
+  role                      VarChar(20)               @default("USER")
+  isActive                  Boolean                   @default(true) @map("is_active")
+  createdAt                 Timestamptz(6)            @default(now()) @map("created_at")
+  updatedAt                 Timestamptz(6)            @default(now()) @map("updated_at")
+
+  farms                     Farm[]
+  diseaseDetections         DiseaseDetections[]
+  approvedRecommendations   IrrigationRecommendations[] @relation("ApprovedBy")
+  notifications             Notifications[]
 
   @@map("users")
 }
 
 model Crop {
-  id          BigInt @id @default(autoincrement())
+  id          Int            @id @default(autoincrement())
   name        VarChar(255)
   description String?
+  createdAt   Timestamptz(6) @default(now()) @map("created_at")
 
   fields Field[]
 
@@ -27,31 +36,260 @@ model Crop {
 }
 
 model Farm {
-  id        BigInt   @id @default(autoincrement())
-  userId    BigInt
+  id        Int            @id @default(autoincrement())
+  userId    Int            @map("user_id")
   name      VarChar(255)
-  location  String
-  area      Numeric(10, 2)
-  createdAt String   @default(now())
-  updatedAt String   @default(now())
+  location  String?
+  area      Decimal?
+  createdAt Timestamptz(6) @default(now()) @map("created_at")
+  updatedAt Timestamptz(6) @default(now()) @map("updated_at")
 
-  user   Users  @relation(fields: [userId], references: [id])
-  fields Field[]
+  user       Users        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fields     Field[]
+  waterTanks WaterTanks[]
+  alerts     Alerts[]
 
+  @@index([userId])
   @@map("farm")
 }
 
 model Field {
-  id        BigInt   @id @default(autoincrement())
-  farmId    BigInt
-  cropId    BigInt?
+  id        Int            @id @default(autoincrement())
+  farmId    Int            @map("farm_id")
+  cropId    Int?           @map("crop_id")
   name      VarChar(255)
-  area      Numeric(10, 2)
-  createdAt String   @default(now())
-  updatedAt String   @default(now())
+  area      Decimal?
+  createdAt Timestamptz(6) @default(now()) @map("created_at")
+  updatedAt Timestamptz(6) @default(now()) @map("updated_at")
 
-  farm Farm  @relation(fields: [farmId], references: [id])
-  crop Crop? @relation(fields: [cropId], references: [id])
+  farm                      Farm                         @relation(fields: [farmId], references: [id], onDelete: Cascade)
+  crop                      Crop?                        @relation(fields: [cropId], references: [id], onDelete: SetNull)
+  deviceFields              DeviceFields[]
+  aiAnalyses                AiAnalyses[]
+  diseaseDetections         DiseaseDetections[]
+  irrigationDevices         IrrigationDevices[]
+  irrigationRecommendations IrrigationRecommendations[]
+  alerts                    Alerts[]
 
+  @@index([farmId])
+  @@index([cropId])
   @@map("field")
+}
+
+model WaterTanks {
+  id        Int            @id @default(autoincrement())
+  farmId    Int            @map("farm_id")
+  name      VarChar(255)
+  capacity  Decimal
+  status    VarChar(30)    @default("ACTIVE")
+  createdAt Timestamptz(6) @default(now()) @map("created_at")
+
+  farm              Farm               @relation(fields: [farmId], references: [id], onDelete: Cascade)
+  irrigationDevices IrrigationDevices[]
+
+  @@index([farmId])
+  @@map("water_tanks")
+}
+
+model Devices {
+  id         Int            @id @default(autoincrement())
+  deviceUid  VarChar(255)   @unique @map("device_uid")
+  name       VarChar(255)?
+  status     VarChar(30)    @default("OFFLINE")
+  lastSeenAt Timestamptz(6)? @map("last_seen_at")
+  createdAt  Timestamptz(6) @default(now()) @map("created_at")
+  updatedAt  Timestamptz(6) @default(now()) @map("updated_at")
+
+  deviceFields      DeviceFields[]
+  irrigationDevices IrrigationDevices[]
+  alerts            Alerts[]
+
+  @@map("devices")
+}
+
+model DeviceFields {
+  deviceId   Int            @map("device_id")
+  fieldId    Int            @map("field_id")
+  assignedAt Timestamptz(6) @default(now()) @map("assigned_at")
+
+  device  Devices  @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  field   Field    @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+  sensors Sensors[]
+
+  @@id([deviceId, fieldId])
+  @@index([fieldId])
+  @@map("device_fields")
+}
+
+model Sensors {
+  id            Int            @id @default(autoincrement())
+  deviceId      Int            @map("device_id")
+  fieldId       Int            @map("field_id")
+  sensorType    VarChar(100)   @map("sensor_type")
+  hardwareModel VarChar(100)?  @map("hardware_model")
+  channelKey    VarChar(100)?  @map("channel_key")
+  unit          VarChar(30)?
+  status        VarChar(30)    @default("ACTIVE")
+  createdAt     Timestamptz(6) @default(now()) @map("created_at")
+
+  deviceField DeviceFields    @relation(fields: [deviceId, fieldId], references: [deviceId, fieldId], onDelete: Cascade)
+  readings    SensorReadings[]
+  alerts      Alerts[]
+
+  @@index([deviceId])
+  @@index([fieldId])
+  @@map("sensors")
+}
+
+model SensorReadings {
+  id         Int            @id @default(autoincrement())
+  sensorId   Int            @map("sensor_id")
+  value      Decimal
+  recordedAt Timestamptz(6) @map("recorded_at")
+  receivedAt Timestamptz(6) @default(now()) @map("received_at")
+
+  sensor Sensors @relation(fields: [sensorId], references: [id], onDelete: Cascade)
+
+  @@index([sensorId, recordedAt])
+  @@map("sensor_readings")
+}
+
+model AiAnalyses {
+  id           Int            @id @default(autoincrement())
+  fieldId      Int            @map("field_id")
+  analysisType VarChar(100)   @map("analysis_type")
+  inputStartAt Timestamptz(6)? @map("input_start_at")
+  inputEndAt   Timestamptz(6)? @map("input_end_at")
+  result       Jsonb?
+  summary      String?
+  modelVersion VarChar(100)?  @map("model_version")
+  status       VarChar(30)    @default("COMPLETED")
+  createdAt    Timestamptz(6) @default(now()) @map("created_at")
+
+  field                      Field                         @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+  irrigationRecommendations IrrigationRecommendations[]
+
+  @@index([fieldId])
+  @@map("ai_analyses")
+}
+
+model DiseaseDetections {
+  id           Int            @id @default(autoincrement())
+  userId       Int            @map("user_id")
+  fieldId      Int?           @map("field_id")
+  imagePath    String         @map("image_path")
+  diseaseName  VarChar(255)?  @map("disease_name")
+  confidence   Decimal?
+  status       VarChar(30)    @default("PENDING")
+  aiResult     Jsonb?         @map("ai_result")
+  modelVersion VarChar(100)?  @map("model_version")
+  createdAt    Timestamptz(6) @default(now()) @map("created_at")
+
+  user  Users  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  field Field? @relation(fields: [fieldId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([fieldId])
+  @@map("disease_detections")
+}
+
+model IrrigationDevices {
+  id           Int            @id @default(autoincrement())
+  fieldId      Int            @map("field_id")
+  deviceId     Int?           @map("device_id")
+  waterTankId  Int?           @map("water_tank_id")
+  name         VarChar(255)
+  deviceType   VarChar(100)?  @map("device_type")
+  relayChannel VarChar(100)?  @map("relay_channel")
+  status       VarChar(30)    @default("INACTIVE")
+  createdAt    Timestamptz(6) @default(now()) @map("created_at")
+
+  field           Field                         @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+  device          Devices?                      @relation(fields: [deviceId], references: [id], onDelete: SetNull)
+  waterTank       WaterTanks?                   @relation(fields: [waterTankId], references: [id], onDelete: SetNull)
+  recommendations IrrigationRecommendations[]
+  events          IrrigationEvents[]
+
+  @@index([fieldId])
+  @@map("irrigation_devices")
+}
+
+model IrrigationRecommendations {
+  id                 Int            @id @default(autoincrement())
+  fieldId            Int            @map("field_id")
+  irrigationDeviceId Int?           @map("irrigation_device_id")
+  analysisId         Int?           @map("analysis_id")
+  approvedByUserId   Int?           @map("approved_by_user_id")
+  recommendation     String
+  suggestedDuration  Int?           @map("suggested_duration")
+  status             VarChar(30)    @default("PENDING")
+  createdAt          Timestamptz(6) @default(now()) @map("created_at")
+  updatedAt          Timestamptz(6) @default(now()) @map("updated_at")
+
+  field            Field              @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+  irrigationDevice IrrigationDevices? @relation(fields: [irrigationDeviceId], references: [id], onDelete: SetNull)
+  analysis         AiAnalyses?        @relation(fields: [analysisId], references: [id], onDelete: SetNull)
+  approvedBy       Users?             @relation("ApprovedBy", fields: [approvedByUserId], references: [id], onDelete: SetNull)
+
+  @@index([fieldId])
+  @@map("irrigation_recommendations")
+}
+
+model IrrigationEvents {
+  id                 Int            @id @default(autoincrement())
+  irrigationDeviceId Int            @map("irrigation_device_id")
+  triggeredBy        VarChar(20)    @map("triggered_by")
+  mode               VarChar(20)
+  status             VarChar(30)    @default("PENDING")
+  commandId          Uuid           @unique @map("command_id")
+  requestedAt        Timestamptz(6) @default(now()) @map("requested_at")
+  startedAt          Timestamptz(6)? @map("started_at")
+  endedAt            Timestamptz(6)? @map("ended_at")
+  failureReason      String?        @map("failure_reason")
+  createdAt          Timestamptz(6) @default(now()) @map("created_at")
+
+  irrigationDevice IrrigationDevices @relation(fields: [irrigationDeviceId], references: [id], onDelete: Cascade)
+
+  @@index([irrigationDeviceId])
+  @@map("irrigation_events")
+}
+
+model Alerts {
+  id        Int            @id @default(autoincrement())
+  farmId    Int?           @map("farm_id")
+  fieldId   Int?           @map("field_id")
+  deviceId  Int?           @map("device_id")
+  sensorId  Int?           @map("sensor_id")
+  alertType VarChar(100)   @map("alert_type")
+  severity  VarChar(30)    @default("WARNING")
+  message   String
+  createdAt Timestamptz(6) @default(now()) @map("created_at")
+
+  farm          Farm?           @relation(fields: [farmId], references: [id], onDelete: Cascade)
+  field         Field?          @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+  device        Devices?        @relation(fields: [deviceId], references: [id], onDelete: SetNull)
+  sensor        Sensors?        @relation(fields: [sensorId], references: [id], onDelete: SetNull)
+  notifications Notifications[]
+
+  @@index([fieldId])
+  @@index([farmId])
+  @@map("alerts")
+}
+
+model Notifications {
+  id               Int            @id @default(autoincrement())
+  userId           Int            @map("user_id")
+  alertId          Int?           @map("alert_id")
+  notificationType VarChar(100)   @map("notification_type")
+  title            VarChar(255)
+  message          String
+  isRead           Boolean        @default(false) @map("is_read")
+  createdAt        Timestamptz(6) @default(now()) @map("created_at")
+
+  user  Users  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  alert Alerts? @relation(fields: [alertId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([userId, isRead])
+  @@map("notifications")
 }

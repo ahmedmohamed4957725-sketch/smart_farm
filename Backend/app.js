@@ -3,25 +3,26 @@ dotenv.config();
 import express from "express";
 import bodyParser from "body-parser";
 import authRouter from "./Routes/auth.js";
+import farmRouter from "./Routes/farm.js";
+import fieldRouter from "./Routes/field.js";
+import cropRouter from "./Routes/crop.js";
 
 
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port =  3000;
 
 
 app.use(express.json());
-
-app.use((req, res, next) => {
-    console.log("REQUEST RECEIVED:", req.method, req.url);
-    next();
-});
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
 app.use("/",
-    authRouter
+    authRouter,
+    farmRouter,
+    fieldRouter,
+    cropRouter
 );
 
 
