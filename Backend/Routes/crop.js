@@ -1,8 +1,8 @@
 import express from "express";
 
 import {
-    protect
-} from "../Middleware/checkuser.js";
+    verifyToken
+} from "../Middleware/authMiddleware.js";
 
 import {
     getCrops,
@@ -12,8 +12,8 @@ import {
 
 const router = express.Router();
 
-router.get("/crops/all", protect, getCrops);
-router.patch("/fields/:fieldId/crops/:cropId", protect, selectCropToField);
+router.get("/crops/all", verifyToken, getCrops);
+router.patch("/fields/:fieldId/crops/:cropId", verifyToken, selectCropToField);
 
 
 export default router;
