@@ -1,8 +1,8 @@
 import express from "express";
 
 import {
-    protect
-} from "../Middleware/checkuser.js";
+    verifyToken
+} from "../Middleware/authMiddleware.js";
 
 import {
     getAllFields,
@@ -14,10 +14,10 @@ import {
 
 const router = express.Router();
 
-router.get("/farms/:farmId/fields/all", protect, getAllFields);
-router.get("/farms/fields/search/:name", protect, getFieldByName);
-router.post("/farms/:farmId/fields/create", protect, createField);
-router.put("/farms/:farmId/fields/:id", protect, updateField);
-router.delete("/farms/:farmId/fields/:id", protect, deleteField);
+router.get("/farms/:farmId/fields/all", verifyToken, getAllFields);
+router.get("/farms/fields/search/:name", verifyToken, getFieldByName);
+router.post("/farms/:farmId/fields/create", verifyToken, createField);
+router.put("/farms/:farmId/fields/:id", verifyToken, updateField);
+router.delete("/farms/:farmId/fields/:id", verifyToken, deleteField);
 
 export default router;
