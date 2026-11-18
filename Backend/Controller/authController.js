@@ -2,11 +2,8 @@
 import { db } from "../src/prisma/db.ts";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import {
-    generateAccessToken,
-    generateRefreshToken
-} from "../utils/generateToken.js";
-
+import { createSession } from "../services/session.js";
+import { hashRefreshToken } from "../utils/generateToken.js";
 import googleClient from "../config/google.js";
 
 const saltRounds = 10;
@@ -41,9 +38,8 @@ export const register = async (req, res) => {
             password: hashedPassword
         });
 
-        const accessToken = generateAccessToken(user);
-        const refreshToken = generateRefreshToken(user);
-
+        const { accessToken, refreshToken } = await createSession(user, req);
+        
         return res.status(201).json({
             message: "User registered successfully",
 
@@ -103,8 +99,7 @@ export const login = async (req, res) => {
             });
         }
 
-        const accessToken = generateAccessToken(user);
-        const refreshToken = generateRefreshToken(user);
+        const { accessToken, refreshToken } = await createSession(user, req);
 
         return res.status(200).json({
             message: "Login successful",
@@ -124,7 +119,8 @@ export const login = async (req, res) => {
         console.error(err);
 
         return res.status(500).json({
-            message: "Login failed"
+            message: "Login failed",
+            error: err?.message
         });
     }
 };
@@ -183,8 +179,7 @@ export const googleLogin = async (req, res) => {
             });
         }
 
-        const accessToken = generateAccessToken(user);
-        const refreshToken = generateRefreshToken(user);
+        const { accessToken, refreshToken } = await createSession(user, req);
 
         return res.status(200).json({
 
@@ -193,7 +188,8 @@ export const googleLogin = async (req, res) => {
             user: {
                 id: String(user.id),
                 name: user.name,
-                email: user.email
+                email: user.email,
+                role: user.role || null
             },
             accessToken,
             refreshToken
@@ -209,6 +205,51 @@ export const googleLogin = async (req, res) => {
     }
 };
 
+export const logout = async (req, res) => {
+    try {
+        const { refreshToken } = req.body;
+
+        if (!refreshToken) {
+            return res.status(400).json({
+                message: "Refresh token is required"
+            });
+        }
+
+        const tokenHash = hashRefreshToken(refreshToken);
+
+        const session = await db.orm.public.RefreshTokens.first({
+            tokenHash
+        });
+
+        // Token doesn't exist or already revoked
+        if (!session || session.revokedAt !== null) {
+            return res.status(200).json({
+                message: "Logged out successfully"
+            });
+        }
+
+        const now = Temporal.Now.instant();
+
+        await db.orm.public.RefreshTokens
+            .where({ id: session.id })
+            .update({
+                revokedAt: now
+            });
+
+        return res.status(200).json({
+            message: "Logged out successfully"
+        });
+
+    } catch (error) {
+        console.error("Logout error:", error);
+
+        return res.status(500).json({
+            message: "Internal server error"
+        });
+    }
+};
+
+
 
 
 export const refreshAccessToken = async (req, res) => {
@@ -221,32 +262,75 @@ export const refreshAccessToken = async (req, res) => {
             });
         }
 
+        // 1. Verify JWT
         const decoded = jwt.verify(
             refreshToken,
             process.env.JWT_REFRESH_SECRET
         );
 
+        // 2. Hash token
+        const tokenHash = hashRefreshToken(refreshToken);
+
+        // 3. Find session
+        const session = await db.orm.public.RefreshTokens.first({
+            tokenHash
+        });
+
+        if (!session) {
+            return res.status(401).json({
+                message: "Refresh token not found"
+            });
+        }
+
+        // 4. Validate session
+        const now = Temporal.Now.instant();
+
+        const isExpired =
+            Temporal.Instant.compare(session.expiresAt, now) <= 0;
+
+        if (
+            session.userId !== Number(decoded.id) ||
+            session.revokedAt !== null ||
+            isExpired
+        ) {
+            return res.status(401).json({
+                message: "Refresh token is invalid or revoked"
+            });
+        }
+
+        // 5. Find user
         const user = await db.orm.public.Users.first({
             id: Number(decoded.id)
         });
 
-        if (!user) {
+        if (!user || !user.isActive) {
             return res.status(401).json({
-                message: "User not found"
+                message: "User not found or inactive"
             });
         }
 
-        const accessToken = generateAccessToken(user);
+        // 6. Revoke old session
+        await db.orm.public.RefreshTokens
+            .where({ id: session.id })
+            .update({
+                revokedAt: now
+            });
+
+        // 7. Create new session
+        const tokens = await createSession(user, req);
 
         return res.status(200).json({
-            accessToken
+            message: "Token refreshed successfully",
+            accessToken: tokens.accessToken,
+            refreshToken: tokens.refreshToken
         });
 
     } catch (error) {
         console.error("REFRESH TOKEN ERROR:", error);
 
         return res.status(401).json({
-            message: "Invalid or expired refresh token"
+            message: "Invalid or expired refresh token",
+            error: error?.message
         });
     }
 };

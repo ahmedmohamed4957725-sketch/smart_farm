@@ -20,8 +20,25 @@ model Users {
   diseaseDetections         DiseaseDetections[]
   approvedRecommendations   IrrigationRecommendations[] @relation("ApprovedBy")
   notifications             Notifications[]
+  refreshTokens             RefreshTokens[]
 
   @@map("users")
+}
+
+model RefreshTokens {
+  id         Int             @id @default(autoincrement())
+  userId     Int             @map("user_id")
+  tokenHash  VarChar(255)    @unique @map("token_hash")
+  deviceInfo Jsonb?          @map("device_info")
+  expiresAt  Timestamptz(6)  @map("expires_at")
+  revokedAt  Timestamptz(6)? @map("revoked_at")
+  createdAt  Timestamptz(6)  @default(now()) @map("created_at")
+
+  user Users @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("refresh_tokens")
 }
 
 model Crop {

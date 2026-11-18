@@ -1,4 +1,10 @@
+
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
+
+
+const ACCESS_TOKEN_EXPIRES = "15d";
+const REFRESH_TOKEN_EXPIRES = "30d";
 
 export const generateAccessToken = (user) => {
     return jwt.sign(
@@ -9,7 +15,7 @@ export const generateAccessToken = (user) => {
         },
         process.env.JWT_SECRET,
         {
-            expiresIn: "15d"
+            expiresIn: ACCESS_TOKEN_EXPIRES
         }
     );
 };
@@ -21,7 +27,14 @@ export const generateRefreshToken = (user) => {
         },
         process.env.JWT_REFRESH_SECRET,
         {
-            expiresIn: "1d"
+            expiresIn: REFRESH_TOKEN_EXPIRES
         }
     );
+};
+
+export const hashRefreshToken = (token) => {
+    return crypto
+        .createHash("sha256")
+        .update(token)
+        .digest("hex");
 };
