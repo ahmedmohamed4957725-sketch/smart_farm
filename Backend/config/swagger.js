@@ -1,7 +1,9 @@
 
-import env from "dotenv";
-env.config();
+import dotenv from "dotenv";
+dotenv.config();
+
 import swaggerJsdoc from "swagger-jsdoc";
+import path from "node:path";
 
 const options = {
     definition: {
@@ -16,14 +18,18 @@ const options = {
         servers: [
             {
                 url: process.env.BASE_URL,
-                description: "Local Development Server"
+                description: "Smart Farm API Server"
             }
         ]
     },
 
-    apis: ["./routes/*.js"]
+    apis: [
+        path.resolve(process.cwd(), "Routes/*.js")
+    ]
 };
 
 const swaggerSpec = swaggerJsdoc(options);
+
+console.log("Swagger registered paths:", Object.keys(swaggerSpec.paths));
 
 export default swaggerSpec;
