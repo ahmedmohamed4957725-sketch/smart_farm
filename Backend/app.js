@@ -2,6 +2,10 @@ import dotenv from "dotenv";
 dotenv.config();
 import express from "express";
 import bodyParser from "body-parser";
+import swaggerUi from "swagger-ui-express";
+import swaggerSpec from "./config/swagger.js";
+
+
 import authRouter from "./Routes/auth.js";
 import farmRouter from "./Routes/farm.js";
 import fieldRouter from "./Routes/field.js";
@@ -12,14 +16,15 @@ import adminRouter from "./Routes/admin.js";
 
 
 const app = express();
-//const port = process.env.PORT || 3000;
-const port =  3000;
+//const port =  3000;
+const port = process.env.PORT || 3000;
 
 
 app.use(express.json());
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use("/",
     authRouter,
