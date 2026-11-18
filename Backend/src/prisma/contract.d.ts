@@ -34,7 +34,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'a3f932678557d9a6eee9bc31b4c1318b6a8f8195a7991a4842b62bebaa45c5a3'>;
+  StorageHashBase<'fb1ae497ab8763c01371c772bcad3c33531051b923ddfbe2380935615aad2b18'>;
 export type ExecutionHash = ExecutionHashBase<string>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
@@ -368,6 +368,15 @@ export type FieldOutputTypes = {
       readonly title: Varchar<255>;
       readonly userId: CodecTypes['pg/int4@1']['output'];
     };
+    readonly RefreshTokens: {
+      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly deviceInfo: CodecTypes['pg/jsonb@1']['output'] | null;
+      readonly expiresAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly revokedAt: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
+      readonly tokenHash: Varchar<255>;
+      readonly userId: CodecTypes['pg/int4@1']['output'];
+    };
     readonly SensorReadings: {
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly receivedAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
@@ -526,6 +535,15 @@ export type FieldInputTypes = {
       readonly message: CodecTypes['pg/text@1']['input'];
       readonly notificationType: CodecTypes['sql/varchar@1']['input'];
       readonly title: CodecTypes['sql/varchar@1']['input'];
+      readonly userId: CodecTypes['pg/int4@1']['input'];
+    };
+    readonly RefreshTokens: {
+      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly deviceInfo: CodecTypes['pg/jsonb@1']['input'] | null;
+      readonly expiresAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly revokedAt: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
+      readonly tokenHash: CodecTypes['sql/varchar@1']['input'];
       readonly userId: CodecTypes['pg/int4@1']['input'];
     };
     readonly SensorReadings: {
@@ -688,6 +706,15 @@ export type StorageColumnTypes = {
       readonly title: Varchar<255>;
       readonly user_id: CodecTypes['pg/int4@1']['output'];
     };
+    readonly refresh_tokens: {
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly device_info: CodecTypes['pg/jsonb@1']['output'] | null;
+      readonly expires_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly revoked_at: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
+      readonly token_hash: Varchar<255>;
+      readonly user_id: CodecTypes['pg/int4@1']['output'];
+    };
     readonly sensor_readings: {
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly received_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
@@ -846,6 +873,15 @@ export type StorageColumnInputTypes = {
       readonly message: CodecTypes['pg/text@1']['input'];
       readonly notification_type: CodecTypes['sql/varchar@1']['input'];
       readonly title: CodecTypes['sql/varchar@1']['input'];
+      readonly user_id: CodecTypes['pg/int4@1']['input'];
+    };
+    readonly refresh_tokens: {
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly device_info: CodecTypes['pg/jsonb@1']['input'] | null;
+      readonly expires_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly revoked_at: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
+      readonly token_hash: CodecTypes['sql/varchar@1']['input'];
       readonly user_id: CodecTypes['pg/int4@1']['input'];
     };
     readonly sensor_readings: {
@@ -1068,6 +1104,17 @@ export namespace Models {
     user: public_Users;
     readonly [RelationKeys]?: 'alert' | 'user';
   };
+  export type public_RefreshTokens = {
+    createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
+    deviceInfo: CodecTypes['pg/jsonb@1']['output'] | null;
+    expiresAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
+    id: CodecTypes['pg/int4@1']['output'];
+    revokedAt: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
+    tokenHash: Varchar<255>;
+    userId: CodecTypes['pg/int4@1']['output'];
+    user: public_Users;
+    readonly [RelationKeys]?: 'user';
+  };
   export type public_SensorReadings = {
     id: CodecTypes['pg/int4@1']['output'];
     receivedAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
@@ -1106,8 +1153,9 @@ export namespace Models {
     diseaseDetections: public_DiseaseDetections[];
     farms: public_Farm[];
     notifications: public_Notifications[];
+    refreshTokens: public_RefreshTokens[];
     readonly [RelationKeys]?:
-      'approvedRecommendations' | 'diseaseDetections' | 'farms' | 'notifications';
+      'approvedRecommendations' | 'diseaseDetections' | 'farms' | 'notifications' | 'refreshTokens';
   };
   export type public_WaterTanks = {
     capacity: CodecTypes['pg/numeric@1']['output'];
@@ -1136,6 +1184,7 @@ export declare const models: {
     IrrigationEvents: Models.public_IrrigationEvents;
     IrrigationRecommendations: Models.public_IrrigationRecommendations;
     Notifications: Models.public_Notifications;
+    RefreshTokens: Models.public_RefreshTokens;
     SensorReadings: Models.public_SensorReadings;
     Sensors: Models.public_Sensors;
     Users: Models.public_Users;
@@ -2293,6 +2342,84 @@ type ContractBase = Omit<
                 },
               ];
             };
+            readonly refresh_tokens: {
+              columns: {
+                readonly created_at: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                  readonly typeParams: { readonly precision: 6 };
+                };
+                readonly device_info: {
+                  readonly nativeType: 'jsonb';
+                  readonly codecId: 'pg/jsonb@1';
+                  readonly nullable: true;
+                };
+                readonly expires_at: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly precision: 6 };
+                };
+                readonly id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                };
+                readonly revoked_at: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly precision: 6 };
+                };
+                readonly token_hash: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly length: 255 };
+                };
+                readonly user_id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [{ readonly columns: readonly ['token_hash'] }];
+              indexes: readonly [
+                {
+                  readonly name: 'refresh_tokens_expires_at_idx_35365ada';
+                  readonly prefix: 'refresh_tokens_expires_at_idx';
+                  readonly columns: readonly ['expires_at'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'refresh_tokens_user_id_idx_6c952402';
+                  readonly prefix: 'refresh_tokens_user_id_idx';
+                  readonly columns: readonly ['user_id'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'refresh_tokens';
+                    readonly columns: readonly ['user_id'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'users';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
             readonly sensor_readings: {
               columns: {
                 readonly id: {
@@ -2649,6 +2776,10 @@ type ContractBase = Omit<
     readonly notifications: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'Notifications';
+    };
+    readonly refresh_tokens: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'RefreshTokens';
     };
     readonly sensor_readings: {
       readonly namespace: 'public' & NamespaceId;
@@ -3921,6 +4052,81 @@ type ContractBase = Omit<
               };
             };
           };
+          readonly RefreshTokens: {
+            readonly fields: {
+              readonly createdAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly typeParams: { readonly precision: 6 };
+                };
+              };
+              readonly deviceInfo: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/jsonb@1' };
+              };
+              readonly expiresAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly typeParams: { readonly precision: 6 };
+                };
+              };
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly revokedAt: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly typeParams: { readonly precision: 6 };
+                };
+              };
+              readonly tokenHash: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 255 };
+                };
+              };
+              readonly userId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+            };
+            readonly relations: {
+              readonly user: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Users';
+                };
+                readonly cardinality: 'N:1';
+                readonly nullable: false;
+                readonly on: {
+                  readonly localFields: readonly ['userId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'refresh_tokens';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly createdAt: { readonly column: 'created_at' };
+                readonly deviceInfo: { readonly column: 'device_info' };
+                readonly expiresAt: { readonly column: 'expires_at' };
+                readonly id: { readonly column: 'id' };
+                readonly revokedAt: { readonly column: 'revoked_at' };
+                readonly tokenHash: { readonly column: 'token_hash' };
+                readonly userId: { readonly column: 'user_id' };
+              };
+            };
+          };
           readonly SensorReadings: {
             readonly fields: {
               readonly id: {
@@ -4195,6 +4401,17 @@ type ContractBase = Omit<
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
                   readonly model: 'Notifications';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['userId'];
+                };
+              };
+              readonly refreshTokens: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'RefreshTokens';
                 };
                 readonly cardinality: '1:N';
                 readonly on: {

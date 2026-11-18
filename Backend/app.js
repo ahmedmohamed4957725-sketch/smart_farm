@@ -6,12 +6,14 @@ import authRouter from "./Routes/auth.js";
 import farmRouter from "./Routes/farm.js";
 import fieldRouter from "./Routes/field.js";
 import cropRouter from "./Routes/crop.js";
+import deviceRouter from "./Routes/device.js";
 import adminRouter from "./Routes/admin.js";
 
 
 
 const app = express();
-const port = process.env.PORT || 3000;
+//const port = process.env.PORT || 3000;
+const port =  3000;
 
 
 app.use(express.json());
@@ -24,6 +26,7 @@ app.use("/",
     farmRouter,
     fieldRouter,
     cropRouter,
+    deviceRouter,
     adminRouter
    );
 
