@@ -113,7 +113,7 @@ router.post("/login", login);
  *       401:
  *         description: Google authentication failed
  */
-router.post("/auth/google", googleLogin);
+router.post("/google", googleLogin);
 
 /**
  * @swagger
